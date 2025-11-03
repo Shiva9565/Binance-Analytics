@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1400">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1a1a1a; }
+      .subtitle { font: bold 16px sans-serif; fill: #2c3e50; }
+      .label { font: 12px sans-serif; fill: #2c3e50; }
+      .small-label { font: 10px sans-serif; fill: #555; }
+      .box { stroke: #2c3e50; stroke-width: 2; fill: #fff; }
+      .data-source { fill: #3498db; stroke: #2980b9; }
+      .storage { fill: #e74c3c; stroke: #c0392b; }
+      .analytics { fill: #2ecc71; stroke: #27ae60; }
+      .ui { fill: #9b59b6; stroke: #8e44ad; }
+      .alert { fill: #f39c12; stroke: #d68910; }
+      .arrow { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-data { stroke: #3498db; stroke-width: 2; stroke-dasharray: 5,5; }
+      .arrow-alert { stroke: #f39c12; stroke-width: 2; }
+      .white-text { fill: white; font: bold 14px sans-serif; }
+      .thread { fill: #ecf0f1; stroke: #95a5a6; stroke-dasharray: 3,3; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#34495e" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" class="title">Advanced Pairs Trading Platform - Architecture</text>
+  
+  <!-- Layer Labels -->
+  <text x="50" y="100" class="subtitle">Data Sources</text>
+  <text x="50" y="280" class="subtitle">Ingestion Layer</text>
+  <text x="50" y="480" class="subtitle">Storage Layer</text>
+  <text x="50" y="680" class="subtitle">Analytics Engine</text>
+  <text x="50" y="1020" class="subtitle">Application Layer</text>
+  <text x="50" y="1240" class="subtitle">User Interface</text>
+  
+  <!-- ========== DATA SOURCES ========== -->
+  
+  <!-- Binance WebSocket -->
+  <rect x="250" y="120" width="180" height="80" rx="10" class="box data-source"/>
+  <text x="340" y="150" text-anchor="middle" class="white-text">Binance WebSocket</text>
+  <text x="340" y="170" text-anchor="middle" class="small-label" fill="white">wss://stream.binance.com</text>
+  <text x="340" y="185" text-anchor="middle" class="small-label" fill="white">Real-time Trade Streams</text>
+  
+  <!-- BTC Stream -->
+  <rect x="500" y="130" width="120" height="30" rx="5" class="box data-source"/>
+  <text x="560" y="150" text-anchor="middle" class="white-text" font-size="12">BTC/USDT</text>
+  
+  <!-- ETH Stream -->
+  <rect x="650" y="130" width="120" height="30" rx="5" class="box data-source"/>
+  <text x="710" y="150" text-anchor="middle" class="white-text" font-size="12">ETH/USDT</text>
+  
+  <!-- Arrows from Binance to Streams -->
+  <path d="M 430 160 L 500 145" class="arrow"/>
+  <path d="M 430 160 L 650 145" class="arrow"/>
+  
+  <!-- ========== INGESTION LAYER ========== -->
+  
+  <!-- WebSocket Thread 1 -->
+  <rect x="480" y="250" width="160" height="100" rx="5" class="box thread"/>
+  <rect x="490" y="260" width="140" height="70" rx="5" class="box analytics"/>
+  <text x="560" y="285" text-anchor="middle" class="white-text">WS Thread 1</text>
+  <text x="560" y="305" text-anchor="middle" class="small-label" fill="white">run_ws('btcusdt')</text>
+  <text x="560" y="320" text-anchor="middle" class="small-label" fill="white">Parse JSON</text>
+  
+  <!-- WebSocket Thread 2 -->
+  <rect x="680" y="250" width="160" height="100" rx="5" class="box thread"/>
+  <rect x="690" y="260" width="140" height="70" rx="5" class="box analytics"/>
+  <text x="760" y="285" text-anchor="middle" class="white-text">WS Thread 2</text>
+  <text x="760" y="305" text-anchor="middle" class="small-label" fill="white">run_ws('ethusdt')</text>
+  <text x="760" y="320" text-anchor="middle" class="small-label" fill="white">Parse JSON</text>
+  
+  <!-- Arrows from streams to threads -->
+  <path d="M 560 160 L 560 250" class="arrow-data"/>
+  <path d="M 710 160 L 760 250" class="arrow-data"/>
+  
+  <!-- Data Flow Labels -->
+  <text x="420" y="240" class="small-label">Trade Events</text>
+  
+  <!-- ========== STORAGE LAYER ========== -->
+  
+  <!-- SQLite Database -->
+  <rect x="400" y="500" width="400" height="150" rx="10" class="box storage"/>
+  <text x="600" y="530" text-anchor="middle" class="white-text" font-size="16">SQLite Database (WAL Mode)</text>
+  <text x="600" y="550" text-anchor="middle" class="small-label" fill="white">ticks.db</text>
+  
+  <!-- Tables inside database -->
+  <rect x="420" y="570" width="90" height="60" rx="3" class="box" fill="#fff"/>
+  <text x="465" y="590" text-anchor="middle" class="label" font-size="11">📊 ticks</text>
+  <text x="465" y="605" text-anchor="middle" class="small-label">price, qty</text>
+  <text x="465" y="620" text-anchor="middle" class="small-label">trade_time</text>
+  
+  <rect x="525" y="570" width="90" height="60" rx="3" class="box" fill="#fff"/>
+  <text x="570" y="590" text-anchor="middle" class="label" font-size="11">📈 analytics</text>
+  <text x="570" y="605" text-anchor="middle" class="small-label">z-score, β</text>
+  <text x="570" y="620" text-anchor="middle" class="small-label">correlation</text>
+  
+  <rect x="630" y="570" width="90" height="60" rx="3" class="box" fill="#fff"/>
+  <text x="675" y="590" text-anchor="middle" class="label" font-size="11">🎯 signals</text>
+  <text x="675" y="605" text-anchor="middle" class="small-label">entry/exit</text>
+  <text x="675" y="620" text-anchor="middle" class="small-label">confidence</text>
+  
+  <rect x="735" y="570" width="50" height="60" rx="3" class="box" fill="#fff"/>
+  <text x="760" y="595" text-anchor="middle" class="label" font-size="11">🔔</text>
+  <text x="760" y="610" text-anchor="middle" class="small-label">alerts</text>
+  
+  <!-- Arrows from ingestion to storage -->
+  <path d="M 560 350 L 560 500" class="arrow"/>
+  <path d="M 760 350 L 680 500" class="arrow"/>
+  <text x="450" y="430" class="small-label">INSERT ticks</text>
+  
+  <!-- ========== ANALYTICS ENGINE ========== -->
+  
+  <!-- Fast Analytics Thread -->
+  <rect x="250" y="720" width="250" height="240" rx="10" class="box thread"/>
+  <rect x="260" y="730" width="230" height="220" rx="5" class="box analytics"/>
+  <text x="375" y="755" text-anchor="middle" class="white-text" font-size="14">⚡ Fast Analytics Thread</text>
+  <text x="375" y="775" text-anchor="middle" class="small-label" fill="white">Interval: 0.5s (configurable)</text>
+  
+  <!-- Fast Analytics Operations -->
+  <g transform="translate(270, 790)">
+    <text x="0" y="0" class="small-label" fill="white">• OLS Regression → β (hedge ratio)</text>
+    <text x="0" y="20" class="small-label" fill="white">• Spread = Price_A - β × Price_B</text>
+    <text x="0" y="40" class="small-label" fill="white">• Z-Score = (S - μ) / σ</text>
+    <text x="0" y="60" class="small-label" fill="white">• Rolling Correlation (50 periods)</text>
+    <text x="0" y="80" class="small-label" fill="white">• Volatility (rolling std)</text>
+    <text x="0" y="100" class="small-label" fill="white">• Half-Life calculation</text>
+    <text x="0" y="120" class="small-label" fill="white">• Sharpe Ratio</text>
+    <text x="0" y="140" class="small-label" fill="white">• Generate Trade Signals</text>
+  </g>
+  
+  <!-- Slow Analytics Thread -->
+  <rect x="550" y="720" width="250" height="240" rx="10" class="box thread"/>
+  <rect x="560" y="730" width="230" height="220" rx="5" class="box analytics"/>
+  <text x="675" y="755" text-anchor="middle" class="white-text" font-size="14">🐢 Slow Analytics Thread</text>
+  <text x="675" y="775" text-anchor="middle" class="small-label" fill="white">Interval: 30s (configurable)</text>
+  
+  <!-- Slow Analytics Operations -->
+  <g transform="translate(570, 790)">
+    <text x="0" y="0" class="small-label" fill="white">• Data Resampling (1T, 5T, 15T)</text>
+    <text x="0" y="20" class="small-label" fill="white">• OLS Regression (resampled)</text>
+    <text x="0" y="40" class="small-label" fill="white">• ADF Test (Cointegration)</text>
+    <text x="0" y="60" class="small-label" fill="white">• Statistical Tests</text>
+    <text x="0" y="80" class="small-label" fill="white">• Long-term Metrics</text>
+    <text x="0" y="100" class="small-label" fill="white">• Mean Reversion Analysis</text>
+    <text x="0" y="120" class="small-label" fill="white">• Write to analytics table</text>
+  </g>
+  
+  <!-- Alert Processor -->
+  <rect x="850" y="720" width="200" height="140" rx="10" class="box alert"/>
+  <text x="950" y="750" text-anchor="middle" class="white-text" font-size="14">🚨 Alert Processor</text>
+  <g transform="translate(860, 765)">
+    <text x="0" y="0" class="small-label" fill="white">• Check Alert Conditions</text>
+    <text x="0" y="20" class="small-label" fill="white">• Compare Metrics vs Thresholds</text>
+    <text x="0" y="40" class="small-label" fill="white">• Trigger Notifications</text>
+    <text x="0" y="60" class="small-label" fill="white">• Log Alert Events</text>
+    <text x="0" y="80" class="small-label" fill="white">Operators: >, <, >=, <=, ==, !=</text>
+  </g>
+  
+  <!-- Arrows between storage and analytics -->
+  <path d="M 465 650 L 375 720" class="arrow"/>
+  <path d="M 600 650 L 675 720" class="arrow"/>
+  <path d="M 760 630 L 950 720" class="arrow-alert"/>
+  
+  <path d="M 375 960 L 570 650" class="arrow"/>
+  <path d="M 675 960 L 675 650" class="arrow"/>
+  <path d="M 950 860 L 760 650" class="arrow-alert"/>
+  
+  <text x="500" y="690" class="small-label">READ ticks</text>
+  <text x="640" y="1000" class="small-label">WRITE analytics/signals</text>
+  
+  <!-- ========== APPLICATION LAYER ========== -->
+  
+  <!-- Streamlit Main Thread -->
+  <rect x="300" y="1050" width="600" height="150" rx="10" class="box ui"/>
+  <text x="600" y="1080" text-anchor="middle" class="white-text" font-size="16">🖥️ Streamlit Application (Main Thread)</text>
+  
+  <g transform="translate(320, 1095)">
+    <rect x="0" y="0" width="150" height="40" rx="3" class="box" fill="#fff"/>
+    <text x="75" y="25" text-anchor="middle" class="label">📊 Dashboard</text>
+    
+    <rect x="165" y="0" width="150" height="40" rx="3" class="box" fill="#fff"/>
+    <text x="240" y="25" text-anchor="middle" class="label">📈 Visualizations</text>
+    
+    <rect x="330" y="0" width="150" height="40" rx="3" class="box" fill="#fff"/>
+    <text x="405" y="25" text-anchor="middle" class="label">⚙️ Configuration</text>
+    
+    <rect x="0" y="55" width="150" height="40" rx="3" class="box" fill="#fff"/>
+    <text x="75" y="80" text-anchor="middle" class="label">🎯 Signal Display</text>
+    
+    <rect x="165" y="55" width="150" height="40" rx="3" class="box" fill="#fff"/>
+    <text x="240" y="80" text-anchor="middle" class="label">🔔 Alert Manager</text>
+    
+    <rect x="330" y="55" width="150" height="40" rx="3" class="box" fill="#fff"/>
+    <text x="405" y="80" text-anchor="middle" class="label">💾 Data Export</text>
+  </g>
+  
+  <!-- Arrows from analytics to app -->
+  <path d="M 375 960 L 400 1050" class="arrow"/>
+  <path d="M 675 960 L 600 1050" class="arrow"/>
+  <path d="M 950 860 L 800 1050" class="arrow-alert"/>
+  
+  <!-- ========== USER INTERFACE ========== -->
+  
+  <!-- Browser -->
+  <rect x="350" y="1260" width="500" height="100" rx="10" class="box ui"/>
+  <text x="600" y="1290" text-anchor="middle" class="white-text" font-size="16">🌐 Web Browser (http://localhost:8501)</text>
+  <g transform="translate(370, 1305)">
+    <text x="0" y="0" class="small-label" fill="white">• Real-time Charts (Plotly)</text>
+    <text x="0" y="18" class="small-label" fill="white">• Live Metrics Dashboard</text>
+    <text x="250" y="0" class="small-label" fill="white">• Interactive Controls</text>
+    <text x="250" y="18" class="small-label" fill="white">• Alert Configuration UI</text>
+  </g>
+  
+  <!-- Arrow from app to browser -->
+  <path d="M 600 1200 L 600 1260" class="arrow"/>
+  <text x="520" y="1235" class="small-label">HTTP/WebSocket</text>
+  
+  <!-- ========== DATA FLOW LEGEND ========== -->
+  
+  <g transform="translate(950, 450)">
+    <text x="0" y="0" class="label" font-weight="bold">Legend:</text>
+    <line x1="0" y1="15" x2="40" y2="15" class="arrow"/>
+    <text x="50" y="20" class="small-label">Data Flow</text>
+    
+    <line x1="0" y1="35" x2="40" y2="35" class="arrow-data"/>
+    <text x="50" y="40" class="small-label">Real-time Stream</text>
+    
+    <line x1="0" y1="55" x2="40" y2="55" class="arrow-alert"/>
+    <text x="50" y="60" class="small-label">Alert Flow</text>
+    
+    <rect x="0" y="75" width="30" height="15" class="data-source"/>
+    <text x="40" y="87" class="small-label">Data Source</text>
+    
+    <rect x="0" y="100" width="30" height="15" class="storage"/>
+    <text x="40" y="112" class="small-label">Storage</text>
+    
+    <rect x="0" y="125" width="30" height="15" class="analytics"/>
+    <text x="40" y="137" class="small-label">Analytics</text>
+    
+    <rect x="0" y="150" width="30" height="15" class="ui"/>
+    <text x="40" y="162" class="small-label">UI/Frontend</text>
+    
+    <rect x="0" y="175" width="30" height="15" class="alert"/>
+    <text x="40" y="187" class="small-label">Alerts</text>
+  </g>
+  
+  <!-- ========== PERFORMANCE METRICS ========== -->
+  
+  <g transform="translate(50, 1050)">
+    <rect x="0" y="0" width="200" height="140" rx="5" class="box" fill="#ecf0f1" stroke="#95a5a6"/>
+    <text x="100" y="20" text-anchor="middle" class="label" font-weight="bold">⚡ Performance</text>
+    <text x="10" y="40" class="small-label">Fast Loop: 0.5s</text>
+    <text x="10" y="58" class="small-label">Slow Loop: 30s</text>
+    <text x="10" y="76" class="small-label">UI Refresh: 2s</text>
+    <text x="10" y="94" class="small-label">DB: SQLite WAL</text>
+    <text x="10" y="112" class="small-label">Concurrent: 4+ threads</text>
+    <text x="10" y="130" class="small-label">Latency: < 100ms</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="600" y="1380" text-anchor="middle" class="small-label">Advanced Pairs Trading Platform v1.0 | Multi-threaded Architecture with Real-time Analytics</text>
+</svg>
