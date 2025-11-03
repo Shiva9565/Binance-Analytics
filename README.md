@@ -2,7 +2,6 @@
 
 A sophisticated real-time statistical arbitrage platform for cryptocurrency pairs trading, featuring live market data ingestion, advanced analytics, and intelligent trade signal generation.
 
-![Platform Status](https://img.shields.io/badge/status-production-green)
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
